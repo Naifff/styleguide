@@ -205,90 +205,72 @@ void test(D* x) { f(x); }  // Calls f(B*)
 
 <p>Важно знать, что функции не всегда инлайнятся, даже если они объявлены как таковые; например, виртуальные и рекурсивные функции обычно не инлайнятся. Обычно рекурсивные функции не должны быть инлайновыми. Основная причина сделать виртуальную функцию инлайновой - поместить ее определение в класс, либо для удобства, либо для документирования ее поведения, например, для аксессоров и мутаторов.</p>
 
-<h3 id="Names_and_Order_of_Includes">Names and Order of Includes</h3>
+<h3 id="Names_and_Order_of_Includes">Названия и порядок включения заголовков</h3>
 
-<p>Include headers in the following order: Related header, C system headers,
-C++ standard library headers,
-other libraries' headers, your project's
-headers.</p>
+<p>Включайте заголовки в следующем порядке: Связанный заголовок, системные заголовки C, заголовки стандартной библиотеки C++, заголовки других библиотек, заголовки вашего проекта.</p>
 
 <p>
-All of a project's header files should be
-listed as descendants of the project's source
-directory without use of UNIX directory aliases
-<code>.</code> (the current directory) or <code>..</code>
-(the parent directory). For example,
+Все заголовочные файлы проекта должны быть перечислены как потомки исходного каталога проекта без использования псевдонимов каталогов UNIX
+<code>.</code> (текущий каталог) или <code>..</code>
+родительский каталог). Например,
 
 <code>google-awesome-project/src/base/logging.h</code>
-should be included as:</p>
+должен быть включен как:</p>
 
 <pre>#include "base/logging.h"
 </pre>
 
-<p>In <code><var>dir/foo</var>.cc</code> or
-<code><var>dir/foo_test</var>.cc</code>, whose main
-purpose is to implement or test the stuff in
-<code><var>dir2/foo2</var>.h</code>, order your includes
-as follows:</p>
+<p>В <code><var>dir/foo</var>.cc</code> или
+<code><var>dir/foo_test</var>.cc</code>, основной целью которых является реализация или тестирование материала в
+<code><var>dir2/foo2</var>.h</code>, упорядочьте ваши включения следующим образом:</p>
 
 <ol>
   <li><code><var>dir2/foo2</var>.h</code>.</li>
 
-  <li>A blank line</li>
+  <li>Пустая строка</li>
 
-  <li>C system headers (more precisely: headers in angle brackets with the
-    <code>.h</code> extension), e.g., <code>&lt;unistd.h&gt;</code>,
+  <li>Заголовки системы Си (точнее: заголовки в угловых скобках с расширением 
+    <code>.h</code>), например, <code>&lt;unistd.h&gt;</code>,
     <code>&lt;stdlib.h&gt;</code>.</li>
 
-  <li>A blank line</li>
+  <li>Пустая строка</li>
 
-  <li>C++ standard library headers (without file extension), e.g.,
+  <li>Заголовки стандартной библиотеки C++ (без расширения файла), например, 
     <code>&lt;algorithm&gt;</code>, <code>&lt;cstddef&gt;</code>.</li>
 
-  <li>A blank line</li>
+  <li>Пустая строка</li>
 
   <div>
-  <li>Other libraries' <code>.h</code> files.</li>
+  <li>Файлы <code>.h</code> других библиотек.</li>
 
-  <li>A blank line</li>
+  <li>Пустая строка</li>
   </div>
 
   <li>
-  Your project's <code>.h</code>
-  files.</li>
+  Файлы <code>.h</code> вашего проекта.</li>
 </ol>
 
-<p>Separate each non-empty group with one blank line.</p>
+<p>Отделите каждую непустую группу одной пустой строкой.</p>
 
-<p>With the preferred ordering, if the related header
-<code><var>dir2/foo2</var>.h</code> omits any necessary
-includes, the build of <code><var>dir/foo</var>.cc</code>
-or <code><var>dir/foo</var>_test.cc</code> will break.
-Thus, this rule ensures that build breaks show up first
-for the people working on these files, not for innocent
-people in other packages.</p>
+<p>При предпочтительном порядке, если в связанном заголовке <code><var>dir2/foo2</var>.h</code> отсутствуют необходимые include, сборка <code><var>dir/foo</var>.cc</code> или <code><var>dir/foo_test</var>.cc</code> будет нарушена. Таким образом, это правило гарантирует, что сбои в сборке в первую очередь проявятся у людей, работающих над этими файлами, а не у невинных людей в других пакетах.</p>
 
-<p><code><var>dir/foo</var>.cc</code> and
-<code><var>dir2/foo2</var>.h</code> are usually in the same
-directory (e.g., <code>base/basictypes_test.cc</code> and
-<code>base/basictypes.h</code>), but may sometimes be in different
-directories too.</p>
+<p><code><var>dir/foo</var>.cc</code> и
+<code><var>dir2/foo2</var>.h</code> обычно находятся в одном каталоге (например, <code>base/basictypes_test.cc</code> и
+<code>base/basictypes.h</code>), но иногда могут находиться и в разных каталогах.</p>
 
 
 
-<p>Note that the C headers such as <code>stddef.h</code>
-are essentially interchangeable with their C++ counterparts
+<p>Обратите внимание, что заголовки на языке Си, такие как <code>stddef.h</code>
+по сути, взаимозаменяемы с их аналогами на C++ 
 (<code>cstddef</code>).
-Either style is acceptable, but prefer consistency with existing code.</p>
+Любой стиль приемлем, но предпочтительнее согласованность с существующим кодом.</p>
 
-<p>Within each section the includes should be ordered
-alphabetically. Note that older code might not conform to
-this rule and should be fixed when convenient.</p>
+<p>Внутри каждого раздела включенные элементы должны быть упорядочены в алфавитном порядке. Обратите внимание, что старый код может не соответствовать этому правилу и должен быть исправлен, когда это удобно.</p>
 
-<p>For example, the includes in
+<p>Например, include в
 
 <code>google-awesome-project/src/foo/internal/fooserver.cc</code>
-might look like this:</p>
+может выглядеть следующим образом:</p>
 
 <pre>#include "foo/server/fooserver.h"
 
@@ -305,14 +287,11 @@ might look like this:</p>
 
 <p><b>Exception:</b></p>
 
-<p>Sometimes, system-specific code needs
-conditional includes. Such code can put conditional
-includes after other includes. Of course, keep your
-system-specific code small and localized. Example:</p>
+<p>Иногда код, специфичный для системы, нуждается в условных включениях. Такой код может помещать условные включения после других включений. Конечно, код, специфичный для системы, должен быть небольшим и локализованным. Пример:</p>
 
 <pre>#include "foo/public/fooserver.h"
 
-#include "base/port.h"  // For LANG_CXX11.
+#include "base/port.h"  // Для LANG_CXX11.
 
 #ifdef LANG_CXX11
 #include &lt;initializer_list&gt;
