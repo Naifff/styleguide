@@ -298,109 +298,83 @@ void test(D* x) { f(x); }  // Calls f(B*)
 #endif  // LANG_CXX11
 </pre>
 
-<h2 id="Scoping">Scoping</h2>
+<h2 id="Scoping">Область применения
+</h2>
 
-<h3 id="Namespaces">Namespaces</h3>
+<h3 id="Namespaces">Пространства имен</h3>
 
-<p>With few exceptions, place code in a namespace. Namespaces
-should have unique names based on the project name, and possibly
-its path. Do not use <i>using-directives</i> (e.g.,
-<code>using namespace foo</code>). Do not use
-inline namespaces. For unnamed namespaces, see
-<a href="#Internal_Linkage">Internal Linkage</a>.
+<p>За редким исключением, размещайте код в пространстве имен. Пространства имен должны иметь уникальные имена, основанные на имени проекта и, возможно, пути к нему. Не используйте <i>директивы using</i> (например,
+<code>using namespace foo</code>). Не используйте встроенные пространства имен. О неименованных пространствах имен см. в разделе
+<a href="#Internal_Linkage">Внутренние связи</a>.
 
 </p><p class="definition"></p>
-<p>Namespaces subdivide the global scope
-into distinct, named scopes, and so are useful for preventing
-name collisions in the global scope.</p>
+<p>Пространства имен разделяют глобальную область видимости на отдельные именованные области видимости и поэтому полезны для предотвращения столкновений имен в глобальной области видимости.</p>
 
 <p class="pros"></p>
 
-<p>Namespaces provide a method for preventing name conflicts
-in large programs while allowing most code to use reasonably
-short names.</p>
+<p>Пространства имен обеспечивают метод предотвращения конфликтов имен в больших программах, позволяя большинству кода использовать достаточно короткие имена.</p>
 
-<p>For example, if two different projects have a class
-<code>Foo</code> in the global scope, these symbols may
-collide at compile time or at runtime. If each project
-places their code in a namespace, <code>project1::Foo</code>
-and <code>project2::Foo</code> are now distinct symbols that
-do not collide, and code within each project's namespace
-can continue to refer to <code>Foo</code> without the prefix.</p>
+<p>Например, если два разных проекта имеют класс <code>Foo</code> в глобальной области видимости, эти символы могут столкнуться во время компиляции или во время выполнения. Если каждый проект помещает свой код в пространство имен, то <code>project1::Foo</code> и <code>project2::Foo</code> становятся разными символами, которые не сталкиваются, и код в пространстве имен каждого проекта может продолжать ссылаться на <code>Foo</code> без префикса.</p>
 
-<p>Inline namespaces automatically place their names in
-the enclosing scope. Consider the following snippet, for
-example:</p>
+<p>Инлайн-пространства имен автоматически помещают свои имена в объемлющую область видимости. Рассмотрим, например, следующий фрагмент:</p>
 
 <pre class="neutralcode">namespace outer {
 inline namespace inner {
   void foo();
-}  // namespace inner
-}  // namespace outer
+}  // пространство имен внутреннее
+}  // пространство имен внешнее
 </pre>
 
-<p>The expressions <code>outer::inner::foo()</code> and
-<code>outer::foo()</code> are interchangeable. Inline
-namespaces are primarily intended for ABI compatibility
-across versions.</p>
+<p>Выражения <code>outer::inner::foo()</code> и
+<code>outer::foo()</code> взаимозаменяемы. Инлайн-пространства имен предназначены в первую очередь для совместимости ABI разных версий.</p>
 
 <p class="cons"></p>
 
-<p>Namespaces can be confusing, because they complicate
-the mechanics of figuring out what definition a name refers
-to.</p>
+<p>Пространства имен могут быть запутанными, поскольку они усложняют механику выяснения того, к какому определению относится то или иное имя.</p>
 
-<p>Inline namespaces, in particular, can be confusing
-because names aren't actually restricted to the namespace
-where they are declared. They are only useful as part of
-some larger versioning policy.</p>
+<p>Инлайн-пространства имен, в частности, могут быть запутанными, поскольку имена фактически не ограничены пространством имен, в котором они объявлены. Они полезны только как часть более широкой политики версионирования.</p>
 
-<p>In some contexts, it's necessary to repeatedly refer to
-symbols by their fully-qualified names. For deeply-nested
-namespaces, this can add a lot of clutter.</p>
+<p>В некоторых контекстах необходимо неоднократно ссылаться на символы по их полным именам. Для глубоко вложенных пространств имен это может внести много беспорядка.</p>
 
 <p class="decision"></p>
 
-<p>Namespaces should be used as follows:</p>
+<p>Пространства имен следует использовать следующим образом:</p>
 
 <ul>
-  <li>Follow the rules on <a href="#Namespace_Names">Namespace Names</a>.
-  </li><li>Terminate multi-line namespaces with comments as shown in the given examples.
+  <li>Соблюдайте правила об <a href="#Namespace_Names">именах пространств имен</a>.
+  </li><li>Заканчивайте многострочные пространства имен комментариями, как показано в приведенных примерах.
   </li><li>
 
-  <p>Namespaces wrap the entire source file after
-  includes,
+  <p>Пространства имен оборачивают весь исходный файл после включения, определения/объявления 
   <a href="https://gflags.github.io/gflags/">
-  gflags</a> definitions/declarations
-  and forward declarations of classes from other namespaces.</p>
+  gflags</a> и прямого объявления классов из других пространств имен.</p>
 
-<pre>// In the .h file
+<pre>// В файле .h
 namespace mynamespace {
 
-// All declarations are within the namespace scope.
-// Notice the lack of indentation.
+// Все объявления находятся в пределах пространства имен.
+// Обратите внимание на отсутствие отступов.
 class MyClass {
  public:
   ...
   void Foo();
 };
 
-}  // namespace mynamespace
+}  // пространство имен mynamespace
 </pre>
 
-<pre>// In the .cc file
+<pre>// В файле .cc
 namespace mynamespace {
 
-// Definition of functions is within scope of the namespace.
+// Определение функций находится в области видимости пространства имен.
 void MyClass::Foo() {
   ...
 }
 
-}  // namespace mynamespace
+}  // пространство имен mynamespace
 </pre>
 
-  <p>More complex <code>.cc</code> files might have additional details,
-  like flags or using-declarations.</p>
+  <p>Более сложные файлы<code>.cc</code> могут содержать дополнительные детали, такие как флаги или using-декларации.</p>
 
 <pre>#include "a.h"
 
@@ -410,62 +384,50 @@ namespace mynamespace {
 
 using ::foo::Bar;
 
-...code for mynamespace...    // Code goes against the left margin.
+...code for mynamespace...    // Код идет против левого поля.
 
-}  // namespace mynamespace
+}  // пространство имен mynamespace
 </pre>
   </li>
 
-  <li>To place generated protocol
-  message code in a namespace, use the
-  <code>package</code> specifier in the
-  <code>.proto</code> file. See
+  <li>Чтобы поместить сгенерированный код протокольных сообщений в пространство имен, используйте спецификатор 
+  <code>package</code> в файле
+  <code>.proto</code>. Подробности см. в разделе
 
 
-  <a href="https://developers.google.com/protocol-buffers/docs/reference/cpp-generated#package">
-  Protocol Buffer Packages</a>
-  for details.</li>
+  <a href="https://protobuf.dev/reference/cpp/cpp-generated/#package">
+  Пакеты буфера протокола</a>.</li>
 
-  <li>Do not declare anything in namespace
-  <code>std</code>, including forward declarations of
-  standard library classes. Declaring entities in
-  namespace <code>std</code> is undefined behavior, i.e.,
-  not portable. To declare entities from the standard
-  library, include the appropriate header file.</li>
+  <li>Не объявляйте ничего в пространстве имен <code>std</code>, включая прямое объявление классов стандартной библиотеки. Объявление сущностей в пространстве имен <code>std</code> является неопределенным поведением, т.е. не переносимым. Чтобы объявить сущности из стандартной библиотеки, включите соответствующий заголовочный файл.</li>
 
-  <li><p>You may not use a <i>using-directive</i>
-  to make all names from a namespace available.</p>
+  <li><p>Вы не можете использовать директиву <i>using-directive</i>, чтобы сделать доступными все имена из пространства имен.</p>
 
-<pre class="badcode">// Forbidden -- This pollutes the namespace.
+<pre class="badcode">// Запрещено -- Это загрязняет пространство имен.
 using namespace foo;
 </pre>
   </li>
 
-  <li><p>Do not use <i>Namespace aliases</i> at namespace scope
-  in header files except in explicitly marked
-  internal-only namespaces, because anything imported into a namespace
-  in a header file becomes part of the public
-  API exported by that file.</p>
+  <li><p>Не используйте <i>псевдонимы пространства имен</i> на уровне пространства имен в заголовочных файлах, кроме явно обозначенных внутренних пространств имен, поскольку все, что импортируется в пространство имен в заголовочном файле, становится частью публичного API, экспортируемого этим файлом.</p>
 
-<pre>// Shorten access to some commonly used names in .cc files.
+<pre>// Сократить доступ к некоторым часто используемым именам в файлах .cc.
 namespace baz = ::foo::bar::baz;
 </pre>
 
-<pre>// Shorten access to some commonly used names (in a .h file).
+<pre>// Сокращение доступа к некоторым часто используемым именам (в файле .h).
 namespace librarian {
-namespace impl {  // Internal, not part of the API.
+namespace impl {  // Внутреннее, не являющееся частью API.
 namespace sidetable = ::pipeline_diagnostics::sidetable;
-}  // namespace impl
+}  // пространство имен impl
 
 inline void my_inline_function() {
-  // namespace alias local to a function (or method).
+  // псевдоним пространства имен, локальный для функции (или метода).
   namespace baz = ::foo::bar::baz;
   ...
 }
-}  // namespace librarian
+}  // библиотека пространства имен
 </pre>
 
-  </li><li>Do not use inline namespaces.</li>
+  </li><li>Не используйте встроенные пространства имен.</li>
 </ul>
 
 <a id="Unnamed_Namespaces_and_Static_Variables"></a>
