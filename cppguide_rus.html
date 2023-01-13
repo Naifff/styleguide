@@ -9,7 +9,7 @@
 </head>
 <body onload="initStyleGuide();">
 <div id="content">
-<h1>Google C++ Style Guide</h1>
+<h1>Руководство по стилю Google C++</h1>
 <div class="horizontal_toc" id="tocDiv"></div>
 
 <h2 id="Справочная информация" class="ignoreLink">Background</h2>
@@ -97,30 +97,18 @@
  такая практика была распространена в прошлом, но больше не допускается. Если все инстанцирования шаблона происходят в одном <code>.cc</code>-файле, либо потому что они <a href="https://ru.cppreference.com/w/cpp/language/class_template#.D0.AF.D0.B2.D0.BD.D0.BE.D0.B5_.D1.81.D0.BE.D0.B7.D0.B4.D0.B0.D0.BD.D0.B8.D0.B5_.D1.8D.D0.BA.D0.B7.D0.B5.D0.BC.D0.BF.D0.BB.D1.8F.D1.80.D0.B0">
 явные</a>, либо потому что определение доступно только в <code>.cc</code>-файле, определение шаблона можно оставить в этом файле.</p>
 
-<p>There are rare cases where a file designed to be included is not
-self-contained.  These are typically intended to be included at unusual
-locations, such as the middle of another file.  They might not
-use <a href="#The__define_Guard">header guards</a>, and might not include
-their prerequisites.  Name such files with the <code>.inc</code>
-extension.  Use sparingly, and prefer self-contained headers when
-possible.</p>
+<p>Бывают редкие случаи, когда файл, предназначенный для включения, не является самодостаточным. Обычно они предназначены для включения в необычные места, например, в середину другого файла. Они могут не использовать <a href="#The__define_Guard">защитные заголовки</a>и не включать необходимые условия. Называйте такие файлы с расширением <code>.inc</code>. Используйте их редко и по возможности предпочитайте самодостаточные заголовки.</p>
 
-<h3 id="The__define_Guard">The #define Guard</h3>
+<h3 id="The__define_Guard">Ограждение #define</h3>
 
-<p>All header files should have <code>#define</code> guards to
-prevent multiple inclusion. The format of the symbol name
-should be
+<p>Все заголовочные файлы должны иметь защитные символы <code>#define</code> для предотвращения множественного включения. Формат имени символа должен быть
 
 <code><i>&lt;PROJECT&gt;</i>_<i>&lt;PATH&gt;</i>_<i>&lt;FILE&gt;</i>_H_</code>.</p>
 
 
 
 <div>
-<p>To guarantee uniqueness, they should
-be based on the full path in a project's source tree. For
-example, the file <code>foo/src/bar/baz.h</code> in
-project <code>foo</code> should have the following
-guard:</p>
+<p>Чтобы гарантировать уникальность, они должны быть основаны на полном пути в дереве исходных текстов проекта. Например, файл <code>foo/src/bar/baz.h</code> в проекте <code>foo</code> должен иметь следующий гвард:</p>
 </div>
 
 <pre>#ifndef FOO_BAR_BAZ_H_
@@ -133,32 +121,22 @@ guard:</p>
 
 
 
-<h3 id="Include_What_You_Use">Include What You Use</h3>
+<h3 id="Include_What_You_Use">Включите то, что вы используете</h3>
 
-<p>If a source or header file refers to a symbol defined elsewhere,
-the file should directly include a header file which properly intends
-to provide a declaration or definition of that symbol. It should not
-include header files for any other reason.
+<p>Если исходный или заголовочный файл ссылается на символ, определенный в другом месте, то этот файл должен непосредственно включать заголовочный файл, в котором должным образом предполагается обеспечить объявление или определение этого символа. Он не должен включать заголовочные файлы по какой-либо другой причине.
 </p>
 
-<p>Do not rely on transitive inclusions. This allows people to remove
-no-longer-needed <code>#include</code> statements from their headers without
-breaking clients. This also applies to related headers
-- <code>foo.cc</code> should include <code>bar.h</code> if it uses a
-symbol from it even if <code>foo.h</code>
-includes <code>bar.h</code>.</p>
+<p>Не полагайтесь на переходные включения. Это позволяет людям удалять ненужные <code>#include</code> утверждения из своих заголовков без нарушения клиентов. Это относится и к смежным заголовкам - <code>foo.cc</code> должен включать <code>bar.h</code>, если он использует символ из него, даже если <code>foo.h</code> включает <code>bar.h</code>.</p>
 
-<h3 id="Forward_Declarations">Forward Declarations</h3>
+<h3 id="Forward_Declarations">Прямые объявления</h3>
 
-<p>Avoid using forward declarations where possible.
-  Instead, <a href="#Include_What_You_Use">include the headers you need</a>.
+<p>По возможности избегайте использования прямых объявлений. Вместо этого <a href="#Include_What_You_Use">включайте необходимые заголовки</a>.
 </p>
 
 
 <p class="definition"></p>
-<p>A "forward declaration" is a declaration of an entity
-  without an associated definition.</p>
-<pre>// In a C++ source file:
+<p>Прямое объявление" - это объявление сущности без связанного с ней определения.</p>
+<pre>// В исходном файле C++:
 class B;
 void FuncInB();
 extern int variable_in_b;
@@ -167,41 +145,22 @@ ABSL_DECLARE_FLAG(flag_in_b);
 
 <p class="pros"></p>
 <ul>
-  <li>Forward declarations can save compile time, as
-  <code>#include</code>s force the compiler to open
-  more files and process more input.</li>
+  <li>Прямые объявления могут сэкономить время компиляции, поскольку <code>#includes</code> заставляют компилятор открывать больше файлов и обрабатывать больше входных данных.</li>
 
-  <li>Forward declarations can save on unnecessary
-  recompilation. <code>#include</code>s can force
-  your code to be recompiled more often, due to unrelated
-  changes in the header.</li>
+  <li>Прямые объявления позволяют сэкономить на ненужной перекомпиляции. <code>#includes</code> может заставить ваш код перекомпилироваться чаще из-за несвязанных изменений в заголовке.</li>
 </ul>
 
 <p class="cons"></p>
 <ul>
-  <li>Forward declarations can hide a dependency, allowing
-  user code to skip necessary recompilation when headers
-  change.</li>
+  <li>Прямые объявления могут скрыть зависимость, позволяя пользовательскому коду пропустить необходимую перекомпиляцию при изменении заголовков.</li>
 
-  <li>A forward declaration as opposed to an #include statement
-    makes it difficult for automatic tooling to discover the module
-    defining the symbol.</li>
+  <li>Прямое объявление в отличие от оператора #include затрудняет автоматическому инструментарию обнаружение модуля, определяющего символ.</li>
 
-  <li>A forward declaration may be broken by subsequent
-  changes to the library. Forward declarations of functions
-  and templates can prevent the header owners from making
-  otherwise-compatible changes to their APIs, such as
-  widening a parameter type, adding a template parameter
-  with a default value, or migrating to a new namespace.</li>
+  <li>Прямое объявление может быть нарушено последующими изменениями в библиотеке. Прямое объявление функций и шаблонов может помешать владельцам заголовков внести в API совместимые с ними изменения, например, расширить тип параметра, добавить параметр шаблона со значением по умолчанию или перейти в новое пространство имен.</li>
 
-  <li>Forward declaring symbols from namespace
-  <code>std::</code> yields undefined behavior.</li>
+  <li>Объявление символов из пространства имен <code>std::</code> приводит к неопределенному поведению.</li>
 
-  <li>It can be difficult to determine whether a forward
-  declaration or a full <code>#include</code> is needed.
-  Replacing an <code>#include</code> with a forward
-  declaration can silently change the meaning of
-  code:
+  <li>Бывает трудно определить, нужно ли прямое объявление или полный <code>#include</code>. Замена <code>#include</code> на прямое объявление может молча изменить смысл кода:
 <pre>// b.h:
 struct B {};
 struct D : B {};
@@ -212,70 +171,39 @@ void f(B*);
 void f(void*);
 void test(D* x) { f(x); }  // Calls f(B*)
 </pre>
-  If the <code>#include</code> was replaced with forward
-  decls for <code>B</code> and <code>D</code>,
-  <code>test()</code> would call <code>f(void*)</code>.
+  Если <code>#include</code> заменить прямыми объявлениями для <code>B</code> и <code>D</code>, <code>test()</code> будет вызывать <code>f(void*)</code>.
   </li>
 
-  <li>Forward declaring multiple symbols from a header
-  can be more verbose than simply
-  <code>#include</code>ing the header.</li>
+  <li>Прямое объявление нескольких символов из заголовка может быть более многословным, чем простое <code>#include</code> заголовка.</li>
 
-  <li>Structuring code to enable forward declarations
-  (e.g., using pointer members instead of object members)
-  can make the code slower and more complex.</li>
+  <li>Структурирование кода для обеспечения прямого объявления (например, использование членов-указателей вместо членов-объектов) может сделать код медленнее и сложнее.
+</li>
 
 
 </ul>
 
 <p class="decision"></p>
-<p>Try to avoid forward declarations of entities
-defined in another project.</p>
+<p>Старайтесь избегать прямого объявления сущностей, определенных в другом проекте.</p>
 
-<h3 id="Inline_Functions">Inline Functions</h3>
+<h3 id="Inline_Functions">Инлайн-функции</h3>
 
-<p>Define functions inline only when they are small, say, 10
-lines or fewer.</p>
+<p>Определяйте встроенные функции только тогда, когда они небольшие, скажем, 10 строк или меньше.</p>
 
 <p class="definition"></p>
-<p>You can declare functions in a way that allows the compiler to expand
-them inline rather than calling them through the usual
-function call mechanism.</p>
+<p>Вы можете объявлять функции таким образом, чтобы компилятор расширял их в строке, а не вызывал их через обычный механизм вызова функций.</p>
 
 <p class="pros"></p>
-<p>Inlining a function can generate more efficient object
-code, as long as the inlined function is small. Feel free
-to inline accessors and mutators, and other short,
-performance-critical functions.</p>
+<p>Инкрустация функции может генерировать более эффективный объектный код, если только инкрустированная функция небольшая. Не стесняйтесь инкрустировать аксессоры и мутаторы, а также другие короткие, критичные к производительности функции.</p>
 
 <p class="cons"></p>
-<p>Overuse of inlining can actually make programs slower.
-Depending on a function's size, inlining it can cause the
-code size to increase or decrease. Inlining a very small
-accessor function will usually decrease code size while
-inlining a very large function can dramatically increase
-code size. On modern processors smaller code usually runs
-faster due to better use of the instruction cache.</p>
+<p>Чрезмерное использование инлайнинга может сделать программы медленнее. В зависимости от размера функции, инлайнинг может привести к увеличению или уменьшению размера кода. Инлайнинг очень маленькой функции доступа обычно уменьшает размер кода, в то время как инлайнинг очень большой функции может значительно увеличить размер кода. На современных процессорах код меньшего размера обычно выполняется быстрее благодаря лучшему использованию кэша инструкций.</p>
 
 <p class="decision"></p>
-<p>A decent rule of thumb is to not inline a function if
-it is more than 10 lines long. Beware of destructors,
-which are often longer than they appear because of
-implicit member- and base-destructor calls!</p>
+<p>Хорошее эмпирическое правило - не инлайнить функцию, если ее длина превышает 10 строк. Остерегайтесь деструкторов, которые часто длиннее, чем кажутся, из-за неявных вызовов членов и базовых деструкторов!</p>
 
-<p>Another useful rule of thumb: it's typically not cost
-effective to inline functions with loops or switch
-statements (unless, in the common case, the loop or
-switch statement is never executed).</p>
+<p>Еще одно полезное эмпирическое правило: встраивать функции в циклы или операторы switch обычно нерентабельно (если только, как правило, цикл или оператор switch никогда не выполняется).</p>
 
-<p>It is important to know that functions are not always
-inlined even if they are declared as such; for example,
-virtual and recursive functions are not normally inlined.
-Usually recursive functions should not be inline. The
-main reason for making a virtual function inline is to
-place its definition in the class, either for convenience
-or to document its behavior, e.g., for accessors and
-mutators.</p>
+<p>Важно знать, что функции не всегда инлайнятся, даже если они объявлены как таковые; например, виртуальные и рекурсивные функции обычно не инлайнятся. Обычно рекурсивные функции не должны быть инлайновыми. Основная причина сделать виртуальную функцию инлайновой - поместить ее определение в класс, либо для удобства, либо для документирования ее поведения, например, для аксессоров и мутаторов.</p>
 
 <h3 id="Names_and_Order_of_Includes">Names and Order of Includes</h3>
 
