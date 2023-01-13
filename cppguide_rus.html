@@ -72,48 +72,30 @@
 
 
 
-<p>Do not use
-  <a href="#Nonstandard_Extensions">non-standard extensions</a>.</p>
+<p>Не используйте
+  <a href="#Nonstandard_Extensions">нестандартные расширения</a>.</p>
 
-  <div>Consider portability to other environments
-before using features from C++14 and C++17 in your project.
+  <div>Прежде чем использовать возможности C++14 и C++17 в своем проекте, подумайте о переносимости в другие среды.
 </div>
 
-<h2 id="Header_Files">Header Files</h2>
+<h2 id="Header_Files">Файлы заголовков</h2>
 
-<p>In general, every <code>.cc</code> file should have an
-associated <code>.h</code> file. There are some common
-exceptions, such as unit tests and small <code>.cc</code> files containing
-just a <code>main()</code> function.</p>
+<p>Как правило, каждый файл <code>.cc</code> должен иметь соответствующий файл <code>.h</code>. Существуют некоторые общие исключения, такие как модульные тесты и небольшие <code>.cc</code>-файлы, содержащие только функцию <code>main()</code>.</p>
 
-<p>Correct use of header files can make a huge difference to
-the readability, size and performance of your code.</p>
+<p>Правильное использование заголовочных файлов может существенно повлиять на читабельность, размер и производительность вашего кода.</p>
 
-<p>The following rules will guide you through the various
-pitfalls of using header files.</p>
+<p>Следующие правила проведут вас через различные подводные камни использования заголовочных файлов.</p>
 
 <a id="The_-inl.h_Files"></a>
-<h3 id="Self_contained_Headers">Self-contained Headers</h3>
+<h3 id="Self_contained_Headers">Самодостаточные заголовки</h3>
 
-<p>Header files should be self-contained (compile on their own) and
-end in <code>.h</code>.  Non-header files that are meant for inclusion
-should end in <code>.inc</code> and be used sparingly.</p>
+<p>Заголовочные файлы должны быть самодостаточными (компилироваться самостоятельно) и заканчиваться на <code>.h</code>. Незаголовочные файлы, предназначенные для включения, должны заканчиваться на <code>.inc</code> и использоваться редко.</p>
 
-<p>All header files should be self-contained. Users and refactoring
-tools should not have to adhere to special conditions to include the
-header. Specifically, a header should
-have <a href="#The__define_Guard">header guards</a> and include all
-other headers it needs.</p>
+<p>Все заголовочные файлы должны быть самодостаточными. Пользователи и инструменты рефакторинга не должны придерживаться специальных условий для включения заголовка. В частности, заголовок должен иметь <a href="#The__define_Guard">защиту от заголовков</a> и включать все другие заголовки, которые ему необходимы.</p>
 
-<p>When a header declares inline functions or templates that clients of the
-header will instantiate, the inline functions and templates must also have
-definitions in the header, either directly or in files it includes.  Do not move
-these definitions to separately included header (<code>-inl.h</code>) files;
-this practice was common in the past, but is no longer allowed.  When all
-instantiations of a template occur in one <code>.cc</code> file, either because
-they're <a href="https://en.cppreference.com/w/cpp/language/class_template#Explicit_instantiation">
-explicit</a> or because the definition is accessible to only
-the <code>.cc</code> file, the template definition can be kept in that file.</p>
+<p>Когда заголовок объявляет встроенные функции или шаблоны, которые клиенты заголовка будут инстанцировать, встроенные функции и шаблоны также должны иметь определения в заголовке, либо непосредственно, либо в файлах, которые он включает. Не переносите эти определения в отдельно включаемые файлы заголовка (<code>-inl.h</code>);
+ такая практика была распространена в прошлом, но больше не допускается. Если все инстанцирования шаблона происходят в одном <code>.cc</code>-файле, либо потому что они <a href="https://ru.cppreference.com/w/cpp/language/class_template#.D0.AF.D0.B2.D0.BD.D0.BE.D0.B5_.D1.81.D0.BE.D0.B7.D0.B4.D0.B0.D0.BD.D0.B8.D0.B5_.D1.8D.D0.BA.D0.B7.D0.B5.D0.BC.D0.BF.D0.BB.D1.8F.D1.80.D0.B0">
+явные</a>, либо потому что определение доступно только в <code>.cc</code>-файле, определение шаблона можно оставить в этом файле.</p>
 
 <p>There are rare cases where a file designed to be included is not
 self-contained.  These are typically intended to be included at unusual
